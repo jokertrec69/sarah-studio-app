@@ -27,10 +27,7 @@
     function App() {
       const [nombre, setNombre] = React.useState("");
       const [servicio, setServicio] = React.useState("Manicura");
-      const [ventas, setVentas] = React.useState(() => {
-  const data = localStorage.getItem("ventas");
-  return data ? JSON.parse(data) : [];
-});
+      const [ventas, setVentas] = React.useState([]);
 
       const servicios = {
         Manicura: 50,
@@ -38,42 +35,19 @@
         Acrilicos: 180,
         Pedicura: 80,
       };
- 
-     const registrarVenta = () => {
-  if (!nombre) return;
 
-  let historial = JSON.parse(localStorage.getItem("historial")) || {};
+      const registrarVenta = () => {
+        if (!nombre) return;
 
-  if (!historial[nombre]) {
-    historial[nombre] = 0;
-  }
+        const precio = servicios[servicio];
 
-  historial[nombre] += 1;
+        const nuevaVenta = {
+          cliente: nombre,
+          servicio,
+          total: precio,
+        };
 
-  const precio = servicios[servicio];
-
-  let descuento = 0;
-
-  if (historial[nombre] >= 10) descuento = 0.3;
-  else if (historial[nombre] >= 5) descuento = 0.1;
-
-  const total = precio - precio * descuento;
-
-  const nuevaVenta = {
-    cliente: nombre,
-    servicio,
-    precio,
-    descuento,
-    total,
-    visitas: historial[nombre],
-  };
-
-  const nuevasVentas = [...ventas, nuevaVenta];
-
-  setVentas(nuevasVentas);
-  localStorage.setItem("ventas", JSON.stringify(nuevasVentas));
-  localStorage.setItem("historial", JSON.stringify(historial));
-);
+        setVentas([...ventas, nuevaVenta]);
       };
 
       return (
@@ -102,10 +76,7 @@
             <div className="card" key={i}>
               <p>{v.cliente}</p>
               <p>{v.servicio}</p>
-              <p>Precio: S/{v.precio}</p>
-<p>Descuento: {v.descuento * 100}%</p>
-<p>Total: S/{v.total}</p>
-<p>Visitas: {v.visitas}</p>
+              <p>S/{v.total}</p>
             </div>
           ))}
         </div>
