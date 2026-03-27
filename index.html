@@ -27,7 +27,10 @@
     function App() {
       const [nombre, setNombre] = React.useState("");
       const [servicio, setServicio] = React.useState("Manicura");
-      const [ventas, setVentas] = React.useState([]);
+      const [ventas, setVentas] = React.useState(() => {
+  const data = localStorage.getItem("ventas");
+  return data ? JSON.parse(data) : [];
+});
 
       const servicios = {
         Manicura: 50,
@@ -48,6 +51,10 @@
         };
 
         setVentas([...ventas, nuevaVenta]);
+        localStorage.setItem(
+  "ventas",
+  JSON.stringify([...ventas, nuevaVenta])
+);
       };
 
       return (
