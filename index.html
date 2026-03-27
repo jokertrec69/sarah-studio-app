@@ -38,8 +38,42 @@
         Acrilicos: 180,
         Pedicura: 80,
       };
+ 
+     const registrarVenta = () => {
+  if (!nombre) return;
 
-      const registrarVenta = () => {
+  let historial = JSON.parse(localStorage.getItem("historial")) || {};
+
+  if (!historial[nombre]) {
+    historial[nombre] = 0;
+  }
+
+  historial[nombre] += 1;
+
+  const precio = servicios[servicio];
+
+  let descuento = 0;
+
+  if (historial[nombre] >= 10) descuento = 0.3;
+  else if (historial[nombre] >= 5) descuento = 0.1;
+
+  const total = precio - precio * descuento;
+
+  const nuevaVenta = {
+    cliente: nombre,
+    servicio,
+    precio,
+    descuento,
+    total,
+    visitas: historial[nombre],
+  };
+
+  const nuevasVentas = [...ventas, nuevaVenta];
+
+  setVentas(nuevasVentas);
+  localStorage.setItem("ventas", JSON.stringify(nuevasVentas));
+  localStorage.setItem("historial", JSON.stringify(historial));
+};  
         if (!nombre) return;
 
         const precio = servicios[servicio];
