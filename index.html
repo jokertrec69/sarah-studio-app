@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Sarah Studio</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    body {
+      font-family: Arial;
+      background: #f5f0e6;
+      padding: 20px;
+    }
+    .card {
+      background: white;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    function App() {
+      const [nombre, setNombre] = React.useState("");
+      const [servicio, setServicio] = React.useState("Manicura");
+      const [ventas, setVentas] = React.useState([]);
+
+      const servicios = {
+        Manicura: 50,
+        "Soft Gel": 125,
+        Acrilicos: 180,
+        Pedicura: 80,
+      };
+
+      const registrarVenta = () => {
+        if (!nombre) return;
+
+        const precio = servicios[servicio];
+
+        const nuevaVenta = {
+          cliente: nombre,
+          servicio,
+          total: precio,
+        };
+
+        setVentas([...ventas, nuevaVenta]);
+      };
+
+      return (
+        <div>
+          <h1>💅 Sarah Studio</h1>
+
+          <h2>Cliente</h2>
+          <input
+            placeholder="Nombre"
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
+          />
+
+          <h2>Servicio</h2>
+          <select onChange={(e) => setServicio(e.target.value)}>
+            {Object.keys(servicios).map((s) => (
+              <option key={s}>{s}</option>
+            ))}
+          </select>
+
+          <br /><br />
+          <button onClick={registrarVenta}>Agendar y cobrar</button>
+
+          <h2>Ventas</h2>
+          {ventas.map((v, i) => (
+            <div className="card" key={i}>
+              <p>{v.cliente}</p>
+              <p>{v.servicio}</p>
+              <p>S/{v.total}</p>
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>
