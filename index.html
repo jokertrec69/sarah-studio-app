@@ -102,7 +102,10 @@
             <div className="card" key={i}>
               <p>{v.cliente}</p>
               <p>{v.servicio}</p>
-              <p>S/{v.total}</p>
+              <p>Precio: S/{v.precio}</p>
+<p>Descuento: {v.descuento * 100}%</p>
+<p>Total: S/{v.total}</p>
+<p>Visitas: {v.visitas}</p>
             </div>
           ))}
         </div>
