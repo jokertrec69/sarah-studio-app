@@ -1,91 +1,89 @@
-import React, { useState } from "react";
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Sarah Studio</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    body {
+      font-family: Arial;
+      background: #f5f0e6;
+      padding: 20px;
+    }
+    .card {
+      background: white;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
 
-export default function SarahStudioApp() {
-  const [clientes, setClientes] = useState([]);
-  const [nombre, setNombre] = useState("");
-  const [servicio, setServicio] = useState("Manicura");
-  const [ventas, setVentas] = useState([]);
+  <script type="text/babel">
+    function App() {
+      const [nombre, setNombre] = React.useState("");
+      const [servicio, setServicio] = React.useState("Manicura");
+      const [ventas, setVentas] = React.useState([]);
 
-  const servicios = {
-    Manicura: 50,
-    "Soft Gel": 125,
-    Acrilicos: 180,
-    Pedicura: 80,
-  };
+      const servicios = {
+        Manicura: 50,
+        "Soft Gel": 125,
+        Acrilicos: 180,
+        Pedicura: 80,
+      };
 
-  const duracion = {
-    Manicura: 90,
-    "Soft Gel": 120,
-    Acrilicos: 180,
-    Pedicura: 90,
-  };
+      const registrarVenta = () => {
+        if (!nombre) return;
 
-  const agregarCliente = () => {
-    if (!nombre) return;
-    setClientes([...clientes, { nombre, visitas: 0 }]);
-    setNombre("");
-  };
+        const precio = servicios[servicio];
 
-  const registrarVenta = () => {
-    if (!nombre) return;
+        const nuevaVenta = {
+          cliente: nombre,
+          servicio,
+          total: precio,
+        };
 
-    let cliente = clientes.find((c) => c.nombre === nombre);
-    let visitas = cliente ? cliente.visitas + 1 : 1;
+        setVentas([...ventas, nuevaVenta]);
+      };
 
-    let precio = servicios[servicio];
-    let descuento = 0;
+      return (
+        <div>
+          <h1>💅 Sarah Studio</h1>
 
-    if (visitas >= 10) descuento = 0.3;
-    else if (visitas >= 5) descuento = 0.1;
+          <h2>Cliente</h2>
+          <input
+            placeholder="Nombre"
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
+          />
 
-    let total = precio - precio * descuento;
+          <h2>Servicio</h2>
+          <select onChange={(e) => setServicio(e.target.value)}>
+            {Object.keys(servicios).map((s) => (
+              <option key={s}>{s}</option>
+            ))}
+          </select>
 
-    const nuevaVenta = {
-      cliente: nombre,
-      servicio,
-      precio,
-      descuento,
-      total,
-      fecha: new Date().toLocaleDateString(),
-    };
+          <br /><br />
+          <button onClick={registrarVenta}>Agendar y cobrar</button>
 
-    setVentas([...ventas, nuevaVenta]);
-
-    setClientes((prev) =>
-      prev.map((c) =>
-        c.nombre === nombre ? { ...c, visitas } : c
-      )
-    );
-  };
-
-  return (
-    <div style={{ padding: 20, background: "#f5f0e6", minHeight: "100vh" }}>
-      <h1>💅 Sarah Studio</h1>
-
-      <h2>Agregar Cliente</h2>
-      <input
-        value={nombre}
-        onChange={(e) => setNombre(e.target.value)}
-        placeholder="Nombre"
-      />
-      <button onClick={agregarCliente}>Agregar</button>
-
-      <h2>Registrar Servicio</h2>
-      <select onChange={(e) => setServicio(e.target.value)}>
-        {Object.keys(servicios).map((s) => (
-          <option key={s}>{s}</option>
-        ))}
-      </select>
-      <button onClick={registrarVenta}>Agendar y cobrar</button>
-
-      <h2>Ventas</h2>
-      {ventas.map((v, i) => (
-        <div key={i} style={{ background: "white", margin: 10, padding: 10 }}>
-          <p>Cliente: {v.cliente}</p>
-          <p>Servicio: {v.servicio}</p>
-          <p>Total: S/{v.total}</p>
+          <h2>Ventas</h2>
+          {ventas.map((v, i) => (
+            <div className="card" key={i}>
+              <p>{v.cliente}</p>
+              <p>{v.servicio}</p>
+              <p>S/{v.total}</p>
+            </div>
+          ))}
         </div>
-      ))}
-    </div>
-  );
-}
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>
