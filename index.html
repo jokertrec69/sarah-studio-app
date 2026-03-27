@@ -40,21 +40,40 @@
       };
 
       const registrarVenta = () => {
-        if (!nombre) return;
+  if (!nombre) return;
 
-        const precio = servicios[servicio];
+  let historial = JSON.parse(localStorage.getItem("historial")) || {};
 
-        const nuevaVenta = {
-          cliente: nombre,
-          servicio,
-          total: precio,
-        };
+  if (!historial[nombre]) {
+    historial[nombre] = 0;
+  }
 
-        setVentas([...ventas, nuevaVenta]);
-        localStorage.setItem(
-  "ventas",
-  JSON.stringify([...ventas, nuevaVenta])
-);
+  historial[nombre] += 1;
+
+  const precio = servicios[servicio];
+
+  let descuento = 0;
+
+  if (historial[nombre] >= 10) descuento = 0.3;
+  else if (historial[nombre] >= 5) descuento = 0.1;
+
+  const total = precio - precio * descuento;
+
+  const nuevaVenta = {
+    cliente: nombre,
+    servicio,
+    precio,
+    descuento,
+    total,
+    visitas: historial[nombre],
+  };
+
+  const nuevasVentas = [...ventas, nuevaVenta];
+
+  setVentas(nuevasVentas);
+  localStorage.setItem("ventas", JSON.stringify(nuevasVentas));
+  localStorage.setItem("historial", JSON.stringify(historial));
+};
       };
 
       return (
